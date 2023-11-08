@@ -262,16 +262,36 @@ example {t : ℚ} (ht : t ^ 2 - 4 = 0) :
 example {x y : ℝ} (h1 : x + 3 = 5) (h2 : 2 * x - y * x = 0) : y = 2 :=
   calc
   y = y * x + 3 * y + 2 * x - y * x - 2 * y - 2 * x := by ring
-  _ = - (2 * x - y * x) + 3 * y + 2 * x - y * x - 2 * y := by ring
-  _ = by sorry
+  _ = - (2 * x - y * x) + 3 * y + 2 * x - y * x - 2 * y := by sorry
 
 example {x y : ℝ} (h1 : x + 3 = 5) (h2 : 2 * x - y * x = 0) : y = 2 :=
   calc
-  y = y / 3 * (x + 3) - y * x / 3 + 2 * x / 3 - 2 * x / 3 := by ring
+  y = y / 3 * (x + 3) - y * x / 3 + 2 * x / 3 - 2 * x / 3 := by sorry
+
+example {x y : ℝ} (h1 : x + 3 = 5) (h2 : 2 * x - y * x = 0) : y = 2 :=
+  calc
+  y = (1 / x) * (0) + y := by ring
+  _ = (1 / x) * (2 * x - y * x) + y := by rw[h2]
+  _ = x * x⁻¹ * 2 - x * x⁻¹ * y + y := by ring
+  _ = 2 - y + y := by sorry
+
+example {x y : ℝ} (h1 : x + 3 = 5) (h2 : 2 * x - y * x = 0) : y = 2 :=
+  calc
+  y = 0 / (5 - 3) + y + 2 - 2 := by ring
+  _ = 0 / (x + 3 - 3) + y + 2 - 2 := by rw[h1]
+  _ = 0 / (x) + y + 2 - 2 := by ring
+  _ = (0 - 2 * x + 2 * x) / (x) + y := by ring
+
+example {x y : ℝ} (h1 : x + 3 = 5) (h2 : 2 * x - y * x = 0) : y = 2 :=
+  calc
+  y = (1 / x) * (0) + y - 2 + 2 := by ring
+  _ = (1 / x) * (2 * x - y * x) + y - 2 + 2 := by rw[h2]
+  _ = (2 * x - y * x) / x + (y - 2) + 2 := by ring
+  _ = 2 * x / x - y * x / x + y * x / x - 2 * x / (x) + 2 := by sorry
+
+example {x y : ℝ} (h1 : x + 3 = 5) (h2 : 2 * x - y * x = 0) : y = 2 :=
+  calc
   sorry
-
-example {x y : ℝ} (h1 : x + 3 = 5) (h2 : 2 * x - y * x = 0) : y = 2 :=
-  calc
 
 example {p q r : ℚ} (h1 : p + q + r = 0) (h2 : p * q + p * r + q * r = 2) :
     p ^ 2 + q ^ 2 + r ^ 2 = -4 :=
