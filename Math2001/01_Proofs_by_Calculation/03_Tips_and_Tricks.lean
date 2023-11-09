@@ -258,11 +258,13 @@ example {t : ℚ} (ht : t ^ 2 - 4 = 0) :
   _ = 2 + 10 * t := by ring
   _ = 10 * t + 2 := by ring
 
+/-
+Failed Attempts on exercise 15. It really kicked my ass!
 
 example {x y : ℝ} (h1 : x + 3 = 5) (h2 : 2 * x - y * x = 0) : y = 2 :=
   calc
   y = y * x + 3 * y + 2 * x - y * x - 2 * y - 2 * x := by ring
-  _ = - (2 * x - y * x) + 3 * y + 2 * x - y * x - 2 * y := by sorry
+  _ = - (2 * x - y * x) + 3 * y + 2 * x - y * x - 2 * y := by ring
 
 example {x y : ℝ} (h1 : x + 3 = 5) (h2 : 2 * x - y * x = 0) : y = 2 :=
   calc
@@ -289,9 +291,80 @@ example {x y : ℝ} (h1 : x + 3 = 5) (h2 : 2 * x - y * x = 0) : y = 2 :=
   _ = (2 * x - y * x) / x + (y - 2) + 2 := by ring
   _ = 2 * x / x - y * x / x + y * x / x - 2 * x / (x) + 2 := by sorry
 
+-/
+/-
+It wasn't immediately obvious to me hat you could take
+advantage of subsitution by simplying rewriting x as (x + 3 - 3).
+I kept trying to find a way retrieve a y term out of (2x - yx)
+by multiplying it by (1 / x). It turns out you can't actually
+perform that distribution, because x might be 0. So it was back
+to the drawing board for me. Then, I started to multiply the
+(x + 3) term by y, to hopefully get a y that way instead.
+That turned out to be a dead end too, and I knew it in my gut
+while I was doing it; I just didn't know what else to try.
+
+Ultimately after I realized I wasn't ever going to get anywhere
+with those kinds of manipulations. I returned to the
+equations given:
+1. x + 3 = 5
+2. 2x - yx = 0
+
+I traced the "moves" you go through when you solve this the usual way.
+1. Solve for x, so that you find x = 2
+2. Substitute that x into the second equation.
+3. Solve the second equation, which is now only in terms of y.
+
+As I worked this out, that substitution step was what really caught
+my attention. I asked myself "How can we map that substitution step to
+an algebraic manipulation in the proof?" I started to mess around
+with 2x - yx = 0 on a piece of scrap paper and wrote the following:
+
+Question: How can we write x as a substitution?
+2x - xy = 2(x + 3 - 3) - (x + 3 - 3)y
+        = 2(5 - 3) - (5 - 3)y
+        = 2(2) - (2)y
+        = 4 - 2y
+
+Looking at the way this worked out clued me in. I finally
+had a constant, and a y term on its own. Now, all I needed
+to do was bring that 4 down to a 2, and bring that y down to
+only a single y, so that I could have something like:
+
+2 - y
+
+But how do we do that? Looking at
+
+4 - 2y
+
+we can see that they're both divisble by 2, so perhaps starting
+out our proof by (1 / 2) * (2x - yx) will work! This will leave us:
+
+2 - y
+
+Now we are even closer to our proof. We just have to add a y term
+and we'll be left with just 2, which is what we want! So we add a
+y term at the start of the proof. Now the start of our proof looks
+like this:
+
+(1 / 2) * (2x - yx) + y
+
+Nice. This works out to just 2. Awesome! It's just what we need.
+Now we just remember that we can rewrite (2x - yx) as 0 and it
+becomes the perfect way to start our proof.
+
+y = (1 / 2) * (0) + y
+-/
+
 example {x y : ℝ} (h1 : x + 3 = 5) (h2 : 2 * x - y * x = 0) : y = 2 :=
   calc
-  sorry
+  y = (1 / 2) * (0) + y := by ring
+  _ = (1 / 2) * (2 * x - y * x) + y := by rw[h2]
+  _ = (1 / 2) * (2 * (x + 3 - 3) - (x + 3 - 3) * y) + y := by ring
+  _ = (1 / 2) * (2 * (5 - 3) - (5 - 3) * y) + y := by rw[h1]
+  _ = (1 / 2) * (2 * (2) - (2) * y) + y := by ring
+  _ = (4 / 2) - (2 * y) / 2 + y := by ring
+  _ = 2 - y + y := by ring
+  _ = 2 := by ring
 
 example {p q r : ℚ} (h1 : p + q + r = 0) (h2 : p * q + p * r + q * r = 2) :
     p ^ 2 + q ^ 2 + r ^ 2 = -4 :=
