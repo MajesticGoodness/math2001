@@ -291,8 +291,6 @@ example {x y : ℝ} (h1 : x + 3 = 5) (h2 : 2 * x - y * x = 0) : y = 2 :=
   _ = (2 * x - y * x) / x + (y - 2) + 2 := by ring
   _ = 2 * x / x - y * x / x + y * x / x - 2 * x / (x) + 2 := by sorry
 
--/
-/-
 It wasn't immediately obvious to me hat you could take
 advantage of subsitution by simplying rewriting x as (x + 3 - 3).
 I kept trying to find a way retrieve a y term out of (2x - yx)
@@ -367,5 +365,49 @@ example {x y : ℝ} (h1 : x + 3 = 5) (h2 : 2 * x - y * x = 0) : y = 2 :=
   _ = 2 := by ring
 
 example {p q r : ℚ} (h1 : p + q + r = 0) (h2 : p * q + p * r + q * r = 2) :
-    p ^ 2 + q ^ 2 + r ^ 2 = -4 :=
-  sorry
+  p ^ 2 + q ^ 2 + r ^ 2 = -4 :=
+  calc
+  p ^ 2 + q ^ 2 + r ^ 2
+    = (p - 0) ^ 2 + (q - 0) ^ 2 + (r - 0) ^ 2 - 2 * (0) ^ 2
+    := by ring
+
+  _ = (p - (p + q + r)) ^ 2 + (q - (p + q + r)) ^ 2 + (r - (p + q + r)) ^ 2
+    - 2 * (0) ^ 2
+    := by rw[h1]
+
+  _ = (p - p - q - r) ^ 2 + (q - p - q - r) ^ 2 + (r - p - q - r) ^ 2
+    - 2 * (0) ^ 2
+    := by ring
+
+  _ =  (- q - r) ^ 2 + (- p - r) ^ 2 + (- p - q) ^ 2 - 2 * (0) ^ 2
+    := by ring
+
+  _ = (q ^ 2 + 2 * q * r + r ^ 2) + (p ^ 2 + 2 * p * r + r ^ 2)
+    + (p ^ 2 + 2 * p * q + q ^ 2) - 2 * (0) ^ 2
+    := by ring
+
+  _ = 2 * (p ^ 2 + q ^ 2 + r ^ 2) + 2 * (p * q + p * r + q * r ) - 2 * 0 ^ 2
+    := by ring
+
+  _ = 2 * (p ^ 2 + q ^ 2 + r ^ 2) + 2 * (p * q + p * r + q * r) - 2 * (p + q + r) ^ 2
+    := by rw[h1]
+
+  _ = 2 * (p ^ 2 + q ^ 2 + r ^ 2) + 2 * (p * q + p * r + q * r)
+    - 2 * (p ^ 2 + q ^ 2 + r ^ 2 + 2 * (p * q + p * r + q * r))
+    := by ring
+
+  _ = 2 * p ^ 2 + 2 * q ^ 2 + 2 * r ^ 2 + 2 * (p * q + p * r + q * r)
+    - 2 * p ^ 2 - 2 * q ^ 2 - 2 * r ^ 2 - 4 * (p * q + p * r + q * r)
+    := by ring
+
+  _ = 2 * (p * q + p * r + q * r) - 4 * (p * q + p * r + q * r)
+    := by ring
+
+  _ = 2 * (2) - 4 * (2)
+    := by rw[h2]
+
+  _ = 4 - 8
+    := by ring
+
+  _ = - 4
+    := by ring
