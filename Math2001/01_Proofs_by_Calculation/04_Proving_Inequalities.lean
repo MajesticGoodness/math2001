@@ -7,6 +7,157 @@ attribute [-instance] Int.instDivInt_1 Int.instDivInt EuclideanDomain.instDiv Na
 
 /-! # Section 1.4: Proving inequalities -/
 
+/-
+Examples from section 1.4:
+Trying to solve these on my own as I work through the examples.
+-/
+
+/-Example 1.4.2 (Own attempts):-/
+
+example
+{s r : ℚ}
+(h1: s + 3 ≥ r)
+(h2: s + r ≤ 3) :
+r ≤ 3 :=
+  calc
+  r = s + r - s := by ring
+  _ ≤ s + (s + 3) - s := by rel[h1]
+  _ ≤ s + (s + (s + r)) - s := by sorry
+
+example
+{s r : ℚ}
+(h1: s + 3 ≥ r)
+(h2: s + r ≤ 3) :
+r ≤ 3 :=
+  calc
+  r = s + r - s := by ring
+  _ ≤ (s + (s + 3)) - s := by rel[h1]
+  sorry
+
+example
+{s r : ℚ}
+(h1: s + 3 ≥ r)
+(h2: s + r ≤ 3) :
+r ≤ 3 :=
+  calc
+  r = - (s + r) + r + (s + r):= by ring
+  _ ≤ - (s + r) + (r) + 3 := by rel[h2]
+  _ ≤ - (s + r) + (s + 3) + 3 := by rel[h1]
+  _ = - s - r + (s + 3) + 3 := by ring
+  _ = - r + 3 + 3 := by ring
+  sorry
+
+example
+{s r : ℚ}
+(h1: s + 3 ≥ r)
+(h2: s + r ≤ 3) :
+r ≤ 3 :=
+  calc
+  r = (s + r) - (s + 3) + 3 := by ring
+  _ ≤ (s + r) - (r) + 3 := by rel[h1]
+  _ ≤ (s + (s + 3)) - (r) + 3 := by rel[h1]
+  _ = (s + (s + 3)) - (r + s) + 3 + s := by ring
+  sorry
+
+example
+{s r : ℚ}
+(h1: s + 3 ≥ r)
+(h2: s + r ≤ 3) :
+r ≤ 3 :=
+  calc
+  r = (s + r) - (s + 3) + 3 := by ring
+  _ = (s + r) - s - 3 + 3 := by ring
+  _ ≤ (s + r) - s - (s + r) + 3 := by rel[h2]
+  _ ≤ (s + (s + 3)) - s - (s + r) + 3 := by rel[h1]
+  sorry
+
+example
+{s r : ℚ}
+(h1: s + 3 ≥ r)
+(h2: s + r ≤ 3) :
+r ≤ 3 :=
+  calc
+  r = (s + r) - (s + 3) + 3 := by ring
+  _ = (s + r) - s - 3 + 3 := by ring
+  _ ≤ (s + (s + 3)) - s - 3 + 3 := by rel[h1]
+  sorry
+
+example
+{s r : ℚ}
+(h1: s + 3 ≥ r)
+(h2: s + r ≤ 3) :
+r ≤ 3 :=
+  calc
+  r = (s + r) - (s + 3) + 3 := by ring
+  _ = (s + r) - s - 3 + 3 := by ring
+  _ ≤ (s + r) - s - (s + r) + 3 := by rel[h2]
+  _ ≤ (s + (s + 3)) - s - (s + r) + 3 := by rel[h1]
+  sorry
+
+example
+{s r : ℚ}
+(h1: s + 3 ≥ r)
+(h2: s + r ≤ 3) :
+r ≤ 3 :=
+  calc
+  r = 2 * (s + r) - (s + 3) - r - s + 3 := by ring
+  _ = (s + r) + (s + r) - (s + 3) - r - s + 3 := by ring
+  _ ≤ (s + (s + 3)) + (s + r) - (s + 3) - r - s + 3 := by rel[h1]
+  _ = s + 3 := by ring
+
+example
+{s r : ℚ}
+(h1: s + 3 ≥ r)
+(h2: s + r ≤ 3) :
+r ≤ 3 :=
+  calc
+  r = 2 * (s + r) - s - r - s := by ring
+  _ ≤ (s + r) + 3 - s - r - s := by rel[h2]
+  _ = (s + r) + (- 2 * s + s + 3) - r - s := by ring
+  sorry
+
+example
+{s r : ℚ}
+(h1: s + 3 ≥ r)
+(h2: s + r ≤ 3) :
+r ≤ 3 :=
+  calc
+  r = r + r - (s + r) + s:= by ring
+  sorry
+
+example
+{s r : ℚ}
+(h1: s + 3 ≥ r)
+(h2: s + r ≤ 3) :
+r ≤ 3 :=
+  calc
+  r = r + (s + 3) - s - 3 := by ring
+  _ = (r + s) + 3 - s - 3 := by ring
+
+example
+{s r : ℚ}
+(h1: s + 3 ≥ r)
+(h2: s + r ≤ 3) :
+r ≤ 3 :=
+  calc
+  r = (1 / 2) * ((s + r) - s + r) := by ring
+  _ ≤ (1 / 2) * (s + r - s + (s + 3)) := by rel[h1]
+  _ ≤ (1 / 2) * ((3) - s + (s + 3)) := by rel[h2]
+  _ = (1 / 2) * (6) := by ring
+  _ ≤ (6 / 2) := by numbers
+  _ ≤ 3 := by numbers
+
+/-Example 1.4.3 (Own attempts):-/
+
+example
+{x y : ℝ}
+{h1: y ≤ x + 5}
+{h2: x ≤ -2} :
+x + y < 2
+  calc
+  x + y =
+
+
 
 -- Example 1.4.1
 example {x y : ℤ} (hx : x + 3 ≤ 2) (hy : y + 2 * x ≥ 3) : y > 3 :=
