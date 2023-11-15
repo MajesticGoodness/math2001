@@ -153,11 +153,210 @@ example
 {x y : ℝ}
 {h1: y ≤ x + 5}
 {h2: x ≤ -2} :
-x + y < 2
+x + y < 2 :=
   calc
-  x + y =
+  x + y = (x - 2) / 2 + (x + 5) / 2 + y - (3 / 2) := by ring
+  _ := sorry
+
+example
+{x y : ℝ}
+{h1: y ≤ x + 5}
+{h2: x ≤ -2} :
+x + y < 2 :=
+  calc
+  x + y = (2 - y) + (2 - x) + 2 * (x + y) - 4 := by ring
+  _ := sorry
+
+example
+{x y : ℝ}
+{h1: y ≤ x + 5}
+{h2: x ≤ -2} :
+x + y < 2 :=
+  calc
+  x + y = ((2 - y) + (-x - (-2))) / 2 + (3 / 2) * (x + y) - 2 := by ring
+  _ ≤ ((2 - y) + (-x - x)) / 2 + (3 / 2) * (x + y) - 2 := by rel[h2]
+  _ = ((2 - y) - 2 * x) / 2 + (3 / 2) * (x + y) - 2 := by ring
+  _ = (2 / 2) - (y / 2) - x + (3 * x) / 2 + (3 * y) / 2 - 2 := by ring
+  _ = (2 / 2) + (y) - x + (3 * x) / 2 - 2 := by ring
+  _ ≤ (2 / 2) + (x + 5) - x + (3 * x) / 2 - 2 := by rel[h1]
+  _ = (2 / 2) + 5 + (3 * x) / 2 - 2 := by ring
+  _ ≤ (2 / 2) + 5 + (3 * (-2)) / 2 - 2 := by rel[h2]
+  _ = (2 / 2) + 5 - 6 / 2 - 2 := by ring
+  _ = (2 / 2) + 5 - 3 - 2 := by ring
+  _ := sorry
+
+/-
+Reversing the second inequality wasn't working the way I expected.
+It turns out you just have to be really particular about the way you write it in Lean.
+
+I had written down (just as some random scratch work):
+1. -x + 2
+2. ≤ -x (-x) using the fact that x ≤ - 2 becomes - x ≥ 2 when subtracted.
 
 
+I tried to do that in Lean, but you really have to make it clear that you're
+subtracting a term, not just negating it with a -1. The example directly below shows
+how to write it so Lean accepts it.
+-/
+/-
+example
+{x y : ℝ}
+{h1: y ≤ x + 5}
+{h2: x ≤ -2} :
+x + y < 2 :=
+  calc
+  2 - x = - x - (-2) := by ring
+  _ ≤ - x - x := by rel[h2]
+  sorry
+
+example
+{x y : ℝ}
+{h1: y ≤ x + 5}
+{h2: x ≤ -2} :
+x + y < 2 :=
+  calc
+  x + y = (2 - x) / 2 + (3 / 2) * (x + 5) + y - 17 / 2 := by ring
+  sorry
+
+example
+{x y : ℝ}
+{h1: y ≤ x + 5}
+{h2: x ≤ -2} :
+x + y < 2 :=
+  calc
+  x + y = (2 - x) / 2 + (3 * (x + y)) / 2 + (2 - y) / 2 - 2 := by ring
+  sorry
+-/
+
+example
+{x y : ℝ}
+{h1: y ≤ x + 5}
+{h2: x ≤ -2} :
+x + y < 2 :=
+  calc
+  x + y = x + y := by ring
+  _ ≤ x + (x + 5) := by rel[h1]
+  _ = 2 * x + 5 := by ring
+  _ ≤ 2 * (-2) + 5 := by rel[h2]
+  _ < 2 := by numbers /-Didn't know you could do this lol-/
+
+/-Example 1.4.4 (Own Attempts)-/
+example
+{A B x y u v : ℝ}
+{h1: 0 < A}
+{h2: A ≤ 1}
+{h3: B ≥ 1}
+{h4: x ≤ B}
+{h5: y ≤ B}
+{h6: 0 ≤ u}
+{h7: u < A}
+{h8: 0 ≤ v}
+{h9: v < A} :
+u * y + v * x + u * v ≤ 3 * A * B
+:=
+  calc
+  u * y + v * x + u * v = u * y + v * x + u * v := by ring
+  _ ≤ u * y + v * x + A * v := by rel [h7, h8]
+  _ ≤ u * (B) + v * x + A * v := by rel[h5]
+  _ < (A) * B + v * x + A * v := by rel[h7]
+  _ ≤ A * B + v * (B) + A * v := by rel[h4]
+  _ < A * B + (A) * B + A * A := by rel[h9]
+  _ ≤ A * B + A * B + (1) * A := by rel[h2]
+  _ ≤ A * B + A * B + (1) * (1) := by rel[h2]
+  _ = A * B + A * B + 1 := by ring
+  _ ≤ A * B + A * B + (B) := by rel[h3]
+  _ = 2 * (A * B) + B := by ring
+  _ = := by sorry
+
+example
+{A B x y u v : ℝ}
+{h1: 0 < A}
+{h2: A ≤ 1}
+{h3: B ≥ 1}
+{h4: x ≤ B}
+{h5: y ≤ B}
+{h6: 0 ≤ u}
+{h7: u < A}
+{h8: 0 ≤ v}
+{h9: v < A} :
+u * y + v * x + u * v ≤ 3 * A * B
+:=
+  calc
+  u * y + v * x + u * v = u * y + v * x + u * v := by ring
+  _ ≤ u * y + v * x + A * v := by rel [h7, h8]
+  _ ≤ u * (B) + v * x + A * v := by rel[h5]
+  _ < (A) * B + v * x + A * v := by rel[h7]
+  _ ≤ A * B + v * (B) + A * v := by rel[h4]
+  _ < A * B + (A) * B + A * A := by rel[h9]
+  _ ≤ A * B + A * B + (1) * A := by rel[h2]
+  _ ≤ A * B + A * B + (1) * (1) := by rel[h2]
+  _ = A * B + A * B + 1 := by ring
+  _ ≤ A * B + A * B + (B) := by rel[h3]
+  _ = 2 * (A * B) + B := by ring
+  _ = := by sorry
+
+example
+{A B x y u v : ℝ}
+{h1: 0 < A}
+{h2: A ≤ 1}
+{h3: B ≥ 1}
+{h4: x ≤ B}
+{h5: y ≤ B}
+{h6: 0 ≤ u}
+{h7: u < A}
+{h8: 0 ≤ v}
+{h9: v < A} :
+u * y + v * x + u * v ≤ 3 * A * B
+:=
+  calc
+  u * y + v * x + u * v = u * y + v * x + u * v := by ring
+  _ ≤ u * y + v * x + A * v := by rel [h7, h8]
+  _ ≤ u * (B) + v * x + A * v := by rel[h5]
+  _ < (A) * B + v * x + A * v := by rel[h7]
+  _ ≤ A * B + v * (B) + A * v := by rel[h4]
+  _ < A * B + (A) * B + A * A := by rel[h9]
+  _ ≤ A * B + A * B + (1) * A := by rel[h2]
+  _ = := sorry
+
+/-Final solution for 1.4.4: -/
+example
+{A B x y u v : ℝ}
+{h1: 0 < A}
+{h2: A ≤ 1}
+{h3: B ≥ 1}
+{h4: x ≤ B}
+{h5: y ≤ B}
+{h6: 0 ≤ u}
+{h7: u < A}
+{h8: 0 ≤ v}
+{h9: v < A} :
+u * y + v * x + u * v < 3 * A * B
+:=
+  calc
+  u * y + v * x + u * v = u * y + v * x + u * v := by ring
+  _ ≤ u * y + v * x + A * v := by rel [h7, h8]
+  _ ≤ u * (B) + v * x + A * v := by rel[h5]
+  _ < (A) * B + v * x + A * v := by rel[h7]
+  _ ≤ A * B + v * (B) + A * v := by rel[h4]
+  _ < A * B + (A) * B + A * A := by rel[h9]
+  _ ≤ A * B + A * B + (1) * A := by rel[h2]
+  _ ≤ A * B + A * B + (B) * A := by rel[h3]
+  _ = 3 * A * B := by ring
+
+/-Example 1.4.5 (Own attempts):-/
+example
+{t : ℝ}
+{h1: t ≥ 10} :
+t ^ 2 - 3 * t + 17 ≥ 5
+:=
+  calc
+  t ^ 2 - 3 * t + 17 = t * t - 3 * t + 17 := by ring
+  _ ≥ (10) * t - 3 * t + 17 := by rel[h1]
+  _ = 7 * t + 17 := by ring
+  _ ≥ 7 * (10) + 17 := by rel[h1]
+  _ = 70 + 17 := by ring
+  _ = 87 := by ring
+  _ ≥ 5 := by numbers
 
 -- Example 1.4.1
 example {x y : ℤ} (hx : x + 3 ≤ 2) (hy : y + 2 * x ≥ 3) : y > 3 :=
@@ -172,14 +371,19 @@ example {x y : ℤ} (hx : x + 3 ≤ 2) (hy : y + 2 * x ≥ 3) : y > 3 :=
 -- Exercise: replace the words "sorry" with the correct Lean justification.
 example {r s : ℚ} (h1 : s + 3 ≥ r) (h2 : s + r ≤ 3) : r ≤ 3 :=
   calc
-    r = (s + r + r - s) / 2 := by sorry
-    _ ≤ (3 + (s + 3) - s) / 2 := by sorry
-    _ = 3 := by sorry
+    r = (s + r + r - s) / 2 := by ring
+    _ ≤ (3 + (s + 3) - s) / 2 := by rel [h1, h2]
+    _ = 3 := by ring
 
 -- Example 1.4.3
 -- Exercise: type out the whole proof printed in the text as a Lean proof.
 example {x y : ℝ} (h1 : y ≤ x + 5) (h2 : x ≤ -2) : x + y < 2 :=
-  sorry
+  calc
+  x + y = x + y := by ring
+  _ ≤ x + (x + 5) := by rel[h1]
+  _ = 2 * x + 5 := by ring
+  _ ≤ 2 * (-2) + 5 := by rel[h2]
+  _ < 2 := by numbers /-Didn't know you could do this lol-/
 
 -- Example 1.4.4
 -- Exercise: replace the words "sorry" with the correct Lean justification.
@@ -188,12 +392,12 @@ example {u v x y A B : ℝ} (h1 : 0 < A) (h2 : A ≤ 1) (h3 : 1 ≤ B) (h4 : x �
     u * y + v * x + u * v < 3 * A * B :=
   calc
     u * y + v * x + u * v
-      ≤ u * B + v * B + u * v := by sorry
-    _ ≤ A * B + A * B + A * v := by sorry
-    _ ≤ A * B + A * B + 1 * v := by sorry
-    _ ≤ A * B + A * B + B * v := by sorry
-    _ < A * B + A * B + B * A := by sorry
-    _ = 3 * A * B := by sorry
+      ≤ u * B + v * B + u * v := by rel [h4, h5]
+    _ ≤ A * B + A * B + A * v := by rel [h8, h9]
+    _ ≤ A * B + A * B + 1 * v := by rel [h2]
+    _ ≤ A * B + A * B + B * v := by rel [h3]
+    _ < A * B + A * B + B * A := by rel [h9]
+    _ = 3 * A * B := by ring
 
 -- Example 1.4.5
 -- Exercise: replace the words "sorry" with the correct Lean justification.
