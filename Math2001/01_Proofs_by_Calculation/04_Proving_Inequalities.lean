@@ -13,7 +13,7 @@ Trying to solve these on my own as I work through the examples.
 -/
 
 /-Example 1.4.2 (Own attempts):-/
-
+/-
 example
 {s r : ℚ}
 (h1: s + 3 ≥ r)
@@ -133,6 +133,11 @@ r ≤ 3 :=
   calc
   r = r + (s + 3) - s - 3 := by ring
   _ = (r + s) + 3 - s - 3 := by ring
+-/
+/-
+Finally had to look at the solutions I would have never
+thought to start out with a division.
+-/
 
 example
 {s r : ℚ}
@@ -153,9 +158,9 @@ example
 {x y : ℝ}
 {h1: y ≤ x + 5}
 {h2: x ≤ -2} :
-x + y < 2
+x + y < 2 :=
   calc
-  x + y =
+  x + y = (x + 5) - (y - 5) + 2 * y - 5 := by ring
 
 
 
