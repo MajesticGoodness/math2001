@@ -447,6 +447,58 @@ Solution:
 = 7b + 72.
 -/
 
+/-Example 1.4.10
+I attempted for a bit to come up with my own squares to add but quickly got lost.
+I then looked at Heather's squares, and attempted to come up with a solution using them.
+In general, it looks like you want to add squares that give you at least two terms that
+you actually want. It's fine if the square you add gives you one term you don't want;
+you can always find a way to get rid of it. But, if you add a square that only gives
+you one term you actually want, and two other terms you don't, then your life becomes
+harder. You might actually still be able to pull it off, just with a lot more effort.
+Actually, I haven't tested if that's true. You might just end up in a loop of
+continously adding squares and never ending up where you want.
+
+The square I came up with was: (a^2 - b^3 * c^3) ^ 2. I wanted to desperately get
+rid of the 8 * a^2 * b^3 * ^c3 term first. While my square did that, it also
+introduced two erroneous terms I did not want: b ^ 6 and c ^ 6. I ended up getting
+rid of one thing I did not want, and ended with two things I don't want! Not a great
+trade imo.
+
+  + (b ^ 4 - c ^ 4) ^ 2
+  + 4 * (a ^ 2 * b * c - b ^ 2 * c ^ 2) ^ 2:
+-/
+example {a b c : ℝ} :
+    a ^ 2 * (a ^ 6 + 8 * b ^ 3 * c ^ 3) ≤ (a ^ 4 + b ^ 4 + c ^ 4) ^ 2 :=
+  calc
+  a ^ 2 * (a ^ 6 + 8 * b ^ 3 * c ^ 3) = a ^ 8 + 8 * a ^ 2 * b ^ 3 * c ^ 3
+  := by ring
+  _ ≤ a ^ 8 + 8 * a ^ 2 * b ^ 3 * c ^ 3 + 2 * (a ^ 2 * (b ^ 2 - c ^ 2)) ^ 2
+  := by extra
+  _ = a ^ 8 + 8 * a ^ 2 * b ^ 3 * c ^ 3
+      + 2 * a ^ 4 * b ^ 4 - 4 * a ^ 4 * b ^ 2 * c ^ 2 + 2 * a ^ 4 * c ^ 4
+      := by ring
+  _ ≤ a ^ 8 + 8 * a ^ 2 * b ^ 3 * c ^ 3
+      + 2 * a ^ 4 * b ^ 4 - 4 * a ^ 4 * b ^ 2 * c ^ 2 + 2 * a ^ 4 * c ^ 4
+      + (b ^ 4 - c ^ 4) ^ 2
+      := by extra
+  _ = a ^ 8 + 8 * a ^ 2 * b ^ 3 * c ^ 3
+      + 2 * a ^ 4 * b ^ 4 - 4 * a ^ 4 * b ^ 2 * c ^ 2 + 2 * a ^ 4 * c ^ 4
+      + b ^ 8 - 2 * b ^ 4 * c ^ 4 + c ^ 8
+      := by ring
+  _ ≤ a ^ 8 + 8 * a ^ 2 * b ^ 3 * c ^ 3
+      + 2 * a ^ 4 * b ^ 4 - 4 * a ^ 4 * b ^ 2 * c ^ 2 + 2 * a ^ 4 * c ^ 4
+      + b ^ 8 - 2 * b ^ 4 * c ^ 4 + c ^ 8
+      + 4 * (a ^ 2 * b * c - b ^ 2 * c ^ 2) ^ 2
+      := by extra
+  _ = a ^ 8 + 8 * a ^ 2 * b ^ 3 * c ^ 3
+      + 2 * a ^ 4 * b ^ 4 - 4 * a ^ 4 * b ^ 2 * c ^ 2 + 2 * a ^ 4 * c ^ 4
+      + b ^ 8 - 2 * b ^ 4 * c ^ 4 + c ^ 8
+      + 4 * a ^ 4 * b ^ 2 * c ^ 2 - 8 * a ^ 2 * b ^ 3 * c ^ 3 + 4 * b ^ 4 * c ^ 4
+      := by ring
+  _ = a ^ 8 + b ^ 8 + c ^ 8 + 2 * a ^ 4 * b ^ 4 + 2 * a ^ 4 * c ^ 4 + 2 * c ^ 4 * b ^ 4 := by ring
+  _ = (a ^ 4 + b ^ 4 + c ^ 4) ^ 2 := by ring
+
+
 -- Example 1.4.1
 example {x y : ℤ} (hx : x + 3 ≤ 2) (hy : y + 2 * x ≥ 3) : y > 3 :=
   calc
@@ -532,12 +584,12 @@ example {a b : ℚ} (h1 : a ≥ 0) (h2 : b ≥ 0) (h3 : a + b ≤ 8) :
     3 * a * b + a ≤ 7 * b + 72 :=
   calc
     3 * a * b + a
-      ≤ 2 * b ^ 2 + a ^ 2 + (3 * a * b + a) := by sorry
-    _ = 2 * ((a + b) * b) + (a + b) * a + a := by sorry
-    _ ≤ 2 * (8 * b) + 8 * a + a := by sorry
-    _ = 7 * b + 9 * (a + b) := by sorry
-    _ ≤ 7 * b + 9 * 8 := by sorry
-    _ = 7 * b + 72 := by sorry
+      ≤ 2 * b ^ 2 + a ^ 2 + (3 * a * b + a) := by extra
+    _ = 2 * ((a + b) * b) + (a + b) * a + a := by ring
+    _ ≤ 2 * (8 * b) + 8 * a + a := by rel [h3]
+    _ = 7 * b + 9 * (a + b) := by ring
+    _ ≤ 7 * b + 9 * 8 := by rel [h3]
+    _ = 7 * b + 72 := by ring
 
 -- Example 1.4.10
 example {a b c : ℝ} :
