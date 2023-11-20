@@ -609,13 +609,33 @@ up in Lean. -/
 
 
 example {x y : ℤ} (h1 : x + 3 ≥ 2 * y) (h2 : 1 ≤ y) : x ≥ -1 :=
-  sorry
+  calc
+  x = x + 3 - 3 := by ring
+  _ ≥ 2 * (y) - 3 := by rel [h1]
+  _ ≥ 2 * (1) - 3 := by rel [h2]
+  _ = 2 - 3 := by ring
+  _ = -1 := by ring
 
 example {a b : ℚ} (h1 : 3 ≤ a) (h2 : a + 2 * b ≥ 4) : a + b ≥ 3 :=
-  sorry
+  calc
+  a + b = (1 / 2) * (a + 2 * b) + (1 / 2) * a := by ring
+  _ ≥ (1 / 2) * (4) + (1 / 2) * a := by rel [h2]
+  _ = 2 + (1 / 2) * a := by ring
+  _ ≥ 2 + (1 / 2) * (3) := by rel [h1]
+  _ = 3 + (1 / 2) := by ring
+  _ ≥ 3 := by numbers
 
 example {x : ℤ} (hx : x ≥ 9) : x ^ 3 - 8 * x ^ 2 + 2 * x ≥ 3 :=
-  sorry
+  calc
+  x ^ 3 - 8 * x ^ 2 + 2 * x = (x ^ 3 + 2 * x) - 8 * x ^ 2 := by ring
+  _ = x * (x ^ 2 + 2) - 8 * x ^ 2 := by ring
+  _ ≥ (9) * (x ^ 2 + 2 ) - 8 * x ^ 2 := by rel [hx]
+  _ = 9 * x ^ 2 + 18 - 8 * x ^ 2 := by ring
+  _ = x ^ 2 + 18 := by ring
+  _ ≥ (9) ^ 2 + 18 := by rel [hx]
+  _ = 81 + 18 := by ring
+  _ = 99 := by ring
+  _ ≥ 3 := by numbers
 
 example {n : ℤ} (hn : n ≥ 10) : n ^ 4 - 2 * n ^ 2 > 3 * n ^ 3 :=
   sorry
