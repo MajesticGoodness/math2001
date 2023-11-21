@@ -637,14 +637,55 @@ example {x : ℤ} (hx : x ≥ 9) : x ^ 3 - 8 * x ^ 2 + 2 * x ≥ 3 :=
   _ = 99 := by ring
   _ ≥ 3 := by numbers
 
+/- Attempts for exercise 4 that didn't quite get us there:
+
 example {n : ℤ} (hn : n ≥ 10) : n ^ 4 - 2 * n ^ 2 > 3 * n ^ 3 :=
-  sorry
+  calc
+  n ^ 4 - 2 * n ^ 2 = n ^ 4 - 2 * n ^ 2 := by ring
+  _ ≥ (10) ^ 4 - 2 * n ^ 2 := by rel [hn]
+  _ ≥ (10) ^ 4 - 2 * (10) ^ 2 := by sorry
+
+example {n : ℤ} (hn : n ≥ 10) : n ^ 4 - 2 * n ^ 2 > 3 * n ^ 3 :=
+  calc
+  n ^ 4 - 2 * n ^ 2 = n ^ 4 - 2 * n ^ 2  + 3 * 10 ^ 3 - 3 * 10 ^ 3:= by ring
+  _ = n ^ 2 * (n ^ 2 - 2) + 3 * 10 ^ 3 - 3 * 10 ^ 3 := by ring
+  _ ≥ (10) ^ 2 * ((10) ^ 2 - 2) + 3 * 10 ^ 3 - 3 * 10 ^ 3 := by rel [hn]
+  _ = 9800 + 3 * 10 ^ 3 - 3 * 10 ^ 3 := by ring
+  _ = 3 * 10 ^ 3 + 6800 := by ring
+  _ ≥ 3 * (n) ^ 3 + 6800 := by sorry
+
+-/
+example {n : ℤ} (hn : n ≥ 10) : n ^ 4 - 2 * n ^ 2 > 3 * n ^ 3 :=
+  calc
+  n ^ 4 - 2 * n ^ 2 = n ^ 4 - 10 * n ^ 2 + 8 * n ^ 2 := by ring
+  _ ≥ n ^ 4 - (n) * n ^ 2 + 8 * n ^ 2 := by rel [hn]
+  _ = n ^ 3 * (n - 1) + 8 * n ^ 2 := by ring
+  _ ≥ n ^ 3 * ((10) - 1) + 8 * n ^ 2 := by rel [hn]
+  _ = n ^ 3 * (9) + 8 * n ^ 2 := by ring
+  _ = 3 * n ^ 3 + 6 * n ^ 3 + 8 * n ^ 2 := by ring
+  _ ≥ 3 * n ^ 3 + 6 * (10) ^ 3 + 8 * n ^ 2 := by rel [hn]
+  _ ≥ 3 * n ^ 3 + 6 * (10) ^ 3 + 8 * (10) ^ 2 := by rel [hn]
+  _ = 3 * n ^ 3 + 6000 + 800 := by ring
+  _ = 3 * n ^ 3 + 6800 := by ring
+  _ > 3 * n ^ 3 := by extra
 
 example {n : ℤ} (h1 : n ≥ 5) : n ^ 2 - 2 * n + 3 > 14 :=
-  sorry
+  calc
+  n ^ 2 - 2 * n + 3 = n ^ 2 - 2 * n + 3 := by ring
+  _ = n * (n - 2) + 3 := by ring
+  _ ≥ n * (5 - 2) + 3 := by rel [h1]
+  _ = n * (3) + 3 := by ring
+  _ ≥ (5) * (3) + 3 := by rel [h1]
+  _ = 15 + 3 := by ring
+  _ = 18 := by ring
+  _ > 14 := by numbers
 
 example {x : ℚ} : x ^ 2 - 2 * x ≥ -1 :=
-  sorry
+  calc
+  x ^ 2 - 2 * x = (x - 1) ^ 2 - 1 := by ring
+  _ ≥ -1 := by extra
 
 example (a b : ℝ) : a ^ 2 + b ^ 2 ≥ 2 * a * b :=
-  sorry
+  calc
+  a ^ 2 + b ^ 2 = (a - b) ^ 2 + 2 * a * b := by ring
+  _ ≥ 2 * a * b := by extra
