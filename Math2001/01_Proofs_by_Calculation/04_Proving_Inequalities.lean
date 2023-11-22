@@ -427,12 +427,11 @@ example {a b : ℚ} (h1 : a ≥ 0) (h2 : b ≥ 0) (h3 : a + b ≤ 8) :
       _ = 3 * a * b + a + 7 * b + 72 := by ring
       _ = 7 * b + 72 + 3 * a * b + a := by ring
       _ ≤ 7 * b + 72 := by extra -- Nice try lmao
-      _ := sorry
 
 example {a b : ℚ} (h1 : a ≥ 0) (h2 : b ≥ 0) (h3 : a + b ≤ 8) :
     3 * a * b + a ≤ 7 * b + 72 :=
       calc
-      3 * a * b + a ≤ 3 * a * b + a
+      3 * a * b + a ≤ 3 * a * b + a := by sorry
 
 /-
 Let a and b be nonnegative rational numbers, and suppose that a + b ≤ 8.
