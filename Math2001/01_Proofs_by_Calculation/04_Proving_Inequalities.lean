@@ -152,7 +152,7 @@ r ≤ 3 :=
   _ ≤ (6 / 2) := by numbers
   _ ≤ 3 := by numbers
 
-/-Example 1.4.3 (Own attempts):-/
+/-Example 1.4.3 (Own attempts):
 
 example
 {x y : ℝ}
@@ -189,6 +189,8 @@ x + y < 2 :=
   _ = (2 / 2) + 5 - 6 / 2 - 2 := by ring
   _ = (2 / 2) + 5 - 3 - 2 := by ring
   _ := sorry
+
+-/
 
 /-
 Reversing the second inequality wasn't working the way I expected.
@@ -245,7 +247,7 @@ x + y < 2 :=
   _ ≤ 2 * (-2) + 5 := by rel[h2]
   _ < 2 := by numbers /-Didn't know you could do this lol-/
 
-/-Example 1.4.4 (Own Attempts)-/
+/-Example 1.4.4 (Own Attempts)
 example
 {A B x y u v : ℝ}
 {h1: 0 < A}
@@ -322,6 +324,7 @@ u * y + v * x + u * v ≤ 3 * A * B
   _ < A * B + (A) * B + A * A := by rel[h9]
   _ ≤ A * B + A * B + (1) * A := by rel[h2]
   _ = := sorry
+-/
 
 /-Final solution for 1.4.4: -/
 example
@@ -363,7 +366,7 @@ t ^ 2 - 3 * t + 17 ≥ 5
   _ = 87 := by ring
   _ ≥ 5 := by numbers
 
-/-Example 1.4.6 (Own attempts):-/
+/- Example 1.4.6 (Own attempts):
 example
 {n : ℤ}
 {h1 : n ≥ 5} :
@@ -383,7 +386,7 @@ n ^ 2 ≥ 2 * n + 11 :=
   _ ≥ (5) * n + 5 - 5 := by rel [h1]
   _ ≥ (5) * n + 5 - n := by rel [h1]
   _ = 4 * n + 5 := by ring
-  _ := sorry
+-/
 
 /-Final Solution for 1.4.6 (I think?)-/
 example
@@ -398,13 +401,13 @@ n ^ 2 > 2 * n + 11 :=
   _ = 2 * n + 11 + 4 := by ring
   _ > 2 * n + 11 := by extra -- Learned to use 'extra' after looking at example 1.4.7
 
-/-Example 1.4.7 (Own attempts):-/
+/-Example 1.4.7 (Own attempts):
 example {m n : ℤ} (h : m ^ 2 + n ≤ 2) : n ≤ 2 :=
   calc
   n = m ^ 2 + n - m ^ 2:= by ring
   _ ≤ (2) - m ^ 2 := by rel[h]
   _ ≤ 2 := by sorry
-
+-/
 /-Example 1.4.8 (Own attempts):-/
 example
 {x y : ℝ}
@@ -417,7 +420,7 @@ example
   _ = 2 := by ring
   _ < 3 := by numbers
 
-/-Example 1.4.9 (Own attempts):-/
+/-Example 1.4.9 (Own attempts):
 example {a b : ℚ} (h1 : a ≥ 0) (h2 : b ≥ 0) (h3 : a + b ≤ 8) :
     3 * a * b + a ≤ 7 * b + 72 :=
       calc
@@ -426,13 +429,13 @@ example {a b : ℚ} (h1 : a ≥ 0) (h2 : b ≥ 0) (h3 : a + b ≤ 8) :
       _ ≤ 3 * a * b + a + 7 * b + 9 * (8) := by rel [h3]
       _ = 3 * a * b + a + 7 * b + 72 := by ring
       _ = 7 * b + 72 + 3 * a * b + a := by ring
-      _ ≤ 7 * b + 72 := by extra -- Nice try lmao
+      _ ≤ 7 * b + 72 := by sorry -- Nice try lmao
 
 example {a b : ℚ} (h1 : a ≥ 0) (h2 : b ≥ 0) (h3 : a + b ≤ 8) :
     3 * a * b + a ≤ 7 * b + 72 :=
       calc
       3 * a * b + a ≤ 3 * a * b + a := by sorry
-
+-/
 /-
 Let a and b be nonnegative rational numbers, and suppose that a + b ≤ 8.
 Show that 3ab + a ≤ 7b + 72
