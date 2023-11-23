@@ -58,28 +58,68 @@ example {x y : ℤ} (hx : x + 3 ≤ 2) (hy : y + 2 * x ≥ 3) : y > 3 := by
   _ ≥ 3 - 2 * (-1) := by rel [h1]
   _ > 3 := by numbers
 
-example {x y : ℤ} (hx : x + 3 ≤ 2) (hy : y + 2 * x ≥ 3) : y > 3 := by
-  have h1 : x ≤ -1 := by addarith [hx]
-  have h2 : y ≥ 3 - 2 * x := by addarith [hy]
-  calc
-  y ≥ 3 - 2 * x := by rel [h2]
-  _ > 3 := by numbers
-
-
 example (a b : ℝ) (h1 : -b ≤ a) (h2 : a ≤ b) : a ^ 2 ≤ b ^ 2 := by
-  sorry
+  have h3 : b + a ≥ 0 := by addarith [h1]
+  have h4 : b - a ≥ 0 := by addarith [h2]
+  calc
+  a ^ 2 ≤ a ^ 2 + (b + a) * (b - a) := by extra
+  _ = b ^ 2 := by ring
+
+/- My own naive attempt hehe. Of course it fails because we don't know
+if a ≥ 0 and b ≥ 0.
+example (a b : ℝ) (h : a ≤ b) : a ^ 3 ≤ b ^ 3 := by
+  have h1 : b - a ≥ 0 := by addarith [h]
+  calc
+  a ^ 3 ≤ a ^ 3 + (b - a) ^ 3 := by extra
+  _ = a ^ 3 + b ^ 3 - (3 * a) * (b ^ 2) + 3 * (a ^ 2) * (b) - a ^ 3 := by ring
+  _ = b ^ 3 - (3 * a) * (b ^ 2) + 3 * (a ^ 2) * (b) := by ring
+  _ = b ^ 3 - 3 * a * b * (b - a) := by ring
+  _ ≤ b ^ 3 - 3 * a * b * (0) := by rel [h1] -- fails here.
+  _ = b ^ 3 - (0) := by ring
+  _ = b ^ 3 := by ring
+-/
 
 example (a b : ℝ) (h : a ≤ b) : a ^ 3 ≤ b ^ 3 := by
-  sorry
+  have h1 : 0 ≤ b - a := by addarith [h]
+  calc
+  a ^ 3 ≤ a ^ 3 + ((b - a) * ((b - a) ^ 2 + 3 * (b + a) ^ 2)) / 4 := by extra
+  _ = b ^ 3 := by ring
 
 /-! # Exercises -/
 
 
 example {x : ℚ} (h1 : x ^ 2 = 4) (h2 : 1 < x) : x = 2 := by
-  sorry
+  have h3 : x ^ 2 + 2 * x = 4 + 2 * x := by addarith [h1]
+  have h4 : x ^ 2 + 2 * x = x * (x + 2) := by ring
+  have h5 : 4 + 2 * x = 2 * (x + 2) := by ring
+  have h6 :=
+  calc
+    x * (x + 2) = x ^ 2 + 2 * x := by ring
+    _ = 4 + 2 * x := by rw [h3]
+    _ = 2 * (x + 2) := by ring
+  cancel (x + 2) at h6
 
 example {n : ℤ} (hn : n ^ 2 + 4 = 4 * n) : n = 2 := by
-  sorry
+  have h1 : n ^ 2 - 4 * n + 4 = 0 := by addarith [hn]
+  have h2 :=
+  calc
+    (n - 2) ^ 2 = n ^ 2 - 4 * n + 4 := by ring
+    _ = 0 := by rw [h1]
+  cancel 2 at h2
+  addarith [h2]
 
 example (x y : ℚ) (h : x * y = 1) (h2 : x ≥ 1) : y ≤ 1 := by
-  sorry
+  have h0 : x * y - 1 = 0 := by addarith [h]
+  have h1 : x - 1 ≥ 0 := by addarith [h2]
+  have h9 : x * y ≥ 0 := by extra
+  cancel x at h9
+  have h10 :=
+  calc
+    y = y + 0 ^ 2 := by ring
+    _ = y + (x * y - 1) ^ 2 := by rw [h0]
+    _ = y + x * y * (x * y - 1) - x * y + 1 := by ring
+    _ = y + x * y * (0) - x * y + 1 := by rw [h0]
+    _ = y - x * y + 1 := by ring
+    _ ≤ y - (1) * y + 1 := by rel [h2]
+    _ = 1 := by ring
+  addarith [h10]
