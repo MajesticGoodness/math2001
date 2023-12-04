@@ -234,22 +234,103 @@ example {x y : ℝ} (h : y = 2 * x + 1) : x < y / 2 ∨ x > y / 2 := by
     _ = y / 2 := by ring
 
 example {x : ℝ} (hx : x ^ 2 + 2 * x - 3 = 0) : x = -3 ∨ x = 1 := by
-  sorry
+  have h0 :=
+    calc
+    (x + 3) * (x - 1) = x ^ 2 + 2 * x - 3 := by ring
+    _ = 0 := by rw [hx]
+
+  have h1 := eq_zero_or_eq_zero_of_mul_eq_zero h0
+  obtain h2 | h2 := h1
+  -- I really don't need to use · to create subproofs here.
+  -- I'm just doing it because I just learned it from Heather,
+  -- and now I'm looking for any excuse to use it.
+  · left
+    calc
+    x = x - 0 := by ring
+    _ = x - (x + 3) := by rw[h2]
+    _ = -3 := by ring
+  · right
+    calc
+    x = x - 0 := by ring
+    _ = x - (x - 1) := by rw [h2]
+    _ = 1 := by ring
 
 example {a b : ℝ} (hab : a ^ 2 + 2 * b ^ 2 = 3 * a * b) : a = b ∨ a = 2 * b := by
-  sorry
+  have h0 : a ^ 2 - 3 * a * b + 2 * b ^ 2 = 0 := by addarith [hab]
+  have h1 :=
+    calc
+    (a - b) * (a - 2 * b) = a ^ 2 - 3 * a * b + 2 * b ^ 2 := by ring
+    _ = 0 := by rw [h0]
+
+  have h2 := eq_zero_or_eq_zero_of_mul_eq_zero h1
+  obtain h3 | h3 := h2
+  · left
+    addarith [h3]
+  · right
+    addarith [h3]
 
 example {t : ℝ} (ht : t ^ 3 = t ^ 2) : t = 1 ∨ t = 0 := by
-  sorry
+  have h0 : t ^ 3 - t ^ 2 = 0 := by addarith [ht]
+  have h1 :=
+    calc
+    t ^ 2 * (t - 1) = t ^ 3 - t ^ 2 := by ring
+    _ = 0 := by rw [h0]
+  have h2 := eq_zero_or_eq_zero_of_mul_eq_zero h1
+  obtain h3 | h3 := h2
+  · right
+    cancel 2 at h3
+  · left
+    addarith [h3]
 
 example {n : ℕ} : n ^ 2 ≠ 7 := by
-  sorry
+  have h0 := le_or_succ_le n 2
+  obtain h1 | h1 := h0
+  · apply ne_of_lt
+    calc
+    n ^ 2 ≤ 2 ^ 2 := by rel [h1]
+    _ < 7 := by numbers
+  · apply ne_of_gt
+    calc
+    7 < (3) ^ 2 := by numbers
+    _ ≤ (n) ^ 2 := by rel [h1]
 
 example {x : ℤ} : 2 * x ≠ 3 := by
-  sorry
+  have h0 := le_or_succ_le x 1
+  obtain h1 | h1 := h0
+  · apply ne_of_lt
+    calc
+      2 * x ≤ 2 * (1) := by rel [h1]
+      _ = 2 := by ring
+      _ < 3 := by numbers
+  · apply ne_of_gt
+    calc
+      3 < 2 * 2 := by numbers
+      _ ≤ 2 * (x) := by rel [h1]
 
 example {t : ℤ} : 5 * t ≠ 18 := by
-  sorry
+  have h0 := le_or_succ_le t 3
+  obtain h1 | h1 := h0
+  · apply ne_of_lt
+    calc
+    5 * t ≤ 5 * 3 := by rel [h1]
+    _ = 15 := by ring
+    _ < 18 := by numbers
+  · apply ne_of_gt
+    calc
+    (18:ℤ) < 20 := by numbers
+    _ = 5 * 4 := by ring
+    _ ≤ 5 * (t) := by rel [h1]
 
 example {m : ℕ} : m ^ 2 + 4 * m ≠ 46 := by
-  sorry
+  have h0 := le_or_succ_le m 5
+  obtain h1 | h1 := h0
+  · apply ne_of_lt
+    calc
+    m ^ 2 + 4 * m ≤ (5) ^ 2 + 4 * (5) := by rel [h1]
+    _ = 45 := by ring
+    _ < 46 := by numbers
+  · apply ne_of_gt
+    calc
+    46 < 60 := by numbers
+    _ = (6) ^ 2 + 4 * (6) := by ring
+    _ ≤ (m) ^ 2 + 4 * (m) := by rel [h1]
