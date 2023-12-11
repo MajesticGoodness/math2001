@@ -144,25 +144,44 @@ example : ∃ a b : ℕ, 2 ^ a = 5 * b + 1 := by
 --     _ = x ^ 2 * (x ^ 2 + 1) := by ring
 --     _ < (x ^ 2 + 1) * (x ^ 2 + 1) := by rel [h0]
 
-example (x : ℚ) : ∃ y : ℚ, y ^ 2 > x := by
-  use (x + 1) / 2
-  have h00 :=
-    calc
-    x > x - 1 := by addarith
-    _ = x - 1 := by ring
-  have h0 :=
-    calc
-    x < x + 1 := by addarith
-    _ = x + 1 := by ring
-  have h1337 :=
-    calc
-    x = x / 2 + x / 2 := by ring
-    _ ≤ (x / 2 + x / 2) + ((x - 1) / 2) ^ 2 := by extra
-  have h13377 :=
-    calc
-    x = x / 2 + x / 2 := by ring
-    _ ≤ (x / 2 + x / 2) + ((x - 1) / 2) ^ 2 := by extra
-    _ < (x + 1) / 2 + (x + 1) / 2 + ((x - 1) / 2) ^ 2 := by rel [h0]
+-- example (x : ℚ) : ∃ y : ℚ, y ^ 2 > x := by
+--   use (x + 1) / 2
+--   have h00 :=
+--     calc
+--     x > x - 1 := by addarith
+--     _ = x - 1 := by ring
+--   have h0 :=
+--     calc
+--     x < x + 1 := by addarith
+--     _ = x + 1 := by ring
+--   have h1337 :=
+--     calc
+--     x = x / 2 + x / 2 := by ring
+--     _ ≤ (x / 2 + x / 2) + ((x - 1) / 2) ^ 2 := by extra
+--   have h13377 :=
+--     calc
+--     x = x / 2 + x / 2 := by ring
+--     _ ≤ (x / 2 + x / 2) + ((x - 1) / 2) ^ 2 := by extra
+--     _ < (x + 1) / 2 + (x + 1) / 2 + ((x - 1) / 2) ^ 2 := by rel [h0]
+--   have homie :=
+--     calc
+--     x ≤ ((x + 1) / 2) ^ 2 := by rel[h2]
+--   have h2 :=
+--     calc
+--     ((x + 1) / 2) ^ 2 = x / 2 + x ^ 2 / 4 + 1 / 4 := by ring
+--     _ = (x / 2 + x / 2) + (x ^ 2 / 4 - 2 * x / 4 + 1 / 4) := by ring
+--     _ = (x / 2 + x / 2) + ((x - 1) / 2) ^ 2 := by ring
+--     _ ≥ x := by rel [h1337] -- Close! But how do I get it with '>' instead of '≥'?
+  -- have h2 :=
+  --   calc
+  --   ((x + 1) / 2) ^ 2 > ((x + 1) / 2) ^ 2 - 1 := by addarith
+  --   _ = (x / 2 + x / 2) + (x ^ 2 / 4 - 2 * x / 4 + 1 / 4) - 1:= by ring
+  --   _ = (x / 2 + x / 2) + ((x - 1) / 2) ^ 2 - 1:= by ring
+  --   _ ≥ x - 1:= by rel [h1337] -- Close! But how do I get it with '>' instead of '≥'?
+  -- have h9000 :=
+  --   calc
+  --   ((x + 1) / 2) ^ 2 > ((x + 1) / 2) ^ 2 - 1 := by addarith
+  --   _ > ((x + 1) / 2) ^ 2
   -- have kewl :=
   --   calc
   --   ((x + 1) / 2) ^ 2 = (x / 2 + x / 2) + ((x - 1) / 2) ^ 2 := by ring
@@ -191,6 +210,39 @@ example (x : ℚ) : ∃ y : ℚ, y ^ 2 > x := by
   --   _ = -2 / 2 + (x-1)/2 + (x ^2 / 4 + 1 / 4) := by ring
   --   _ = x / 2 - 3 / 2 + (x ^2 / 4 + 1 / 4) := by ring --idk where i was going with this lmao
   --   _ = ((x + 1) / 2) ^ 2 - 3 / 2 := by ring -- might be a clue, who knows.
+
+/-
+Oh my god, I fucking did it. And the solution was so simple too...Sometimes you just don't
+connect the dots. Once I realized my work was a dead-end, I started gazing at:
+
+(x / 2) + x ^ 2 / 4 + 1 / 4
+
+I thought, jee, we would be finished with our proof if instead of an x / 2 term, we had
+just an x. So, I started asking myself, what kind of square might result in that term being
+reduced to just an x? I started going through the list of perfect squares in my head, to see if
+I could find some combination of integers, that when squared, are reduced to just an x on the
+middle term. Something like:
+
+((3 / 2) * (x + 1)) ^ 2
+
+But I was trying to do the impossible. I don't think there's any combination that would have
+given me what I wanted.
+
+Was there another way? I finally started to consider:
+"what if I just use (2x + 1) / 2 instead of (x + 1) / 2"?
+Damn. That actually works out. I wasn't even considering doing something like that until
+I exhausted all my options lol. Took us a while but we got there.
+
+-/
+example (x : ℚ) : ∃ y : ℚ, y ^ 2 > x := by
+  use (2 * x + 1) / 2
+  have h00 :=
+    calc
+    ((2 * x + 1) / 2) ^ 2 = 4 * x ^ 2 / 4 + 4 * x / 4 + 1 / 4 := by ring
+     _ ≥ 0 + 4 * x / 4 + 1 / 4 := by extra
+     _ = x + 1 / 4 := by ring
+     _ > x := by addarith
+  apply h00
 
 example {t : ℝ} (h : ∃ a : ℝ, a * t + 1 < a + t) : t ≠ 1 := by
   sorry
