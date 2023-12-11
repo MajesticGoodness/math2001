@@ -23,10 +23,26 @@ example {t : ℝ} (h : ∃ a : ℝ, a * t < 0) : t ≠ 0 := by
   obtain hx | hx := H
   · have hxt' : 0 < (-x) * t := by addarith [hxt]
     have hx' : 0 ≤ -x := by addarith [hx]
+
     cancel -x at hxt'
     apply ne_of_gt
     apply hxt'
-  · sorry
+  · have ha :=
+      calc
+      -0 < -(x * t) := by rel [hxt]
+      _ = x * (-t) := by ring
+    have haa :=
+      calc
+      x * (-t) > -0 := by rel [ha]
+      _ = 0 := by ring
+    cancel x at haa
+    apply ne_of_lt
+    have haaa :=
+      calc
+        - (-t) < -0 := by rel [haa]
+        _ = 0 := by ring
+    have : t < 0 := by addarith [haaa]
+    apply this
 
 example : ∃ n : ℤ, 12 * n = 84 := by
   use 7
@@ -39,13 +55,24 @@ example (x : ℝ) : ∃ y : ℝ, y > x := by
 
 
 example : ∃ m n : ℤ, m ^ 2 - n ^ 2 = 11 := by
-  sorry
+  use 6
+  use 5
+  numbers
 
 example (a : ℤ) : ∃ m n : ℤ, m ^ 2 - n ^ 2 = 2 * a + 1 := by
-  sorry
+  use a + 1
+  use a
+  ring
 
 example {p q : ℝ} (h : p < q) : ∃ x, p < x ∧ x < q := by
-  sorry
+  use (p + q) / 2
+  constructor
+  calc
+    p = (p + p) / 2 := by ring
+    _ < (p + q) / 2 := by rel [h]
+  calc
+    (p + q) / 2 < (q + q) / 2 := by rel [h]
+    _ = q := by ring
 
 example : ∃ a b c d : ℕ,
     a ^ 3 + b ^ 3 = 1729 ∧ c ^ 3 + d ^ 3 = 1729 ∧ a ≠ c ∧ a ≠ d := by
@@ -62,17 +89,108 @@ example : ∃ a b c d : ℕ,
 
 
 example : ∃ t : ℚ, t ^ 2 = 1.69 := by
-  sorry
+  use (13 / 10)
+  numbers
+
 example : ∃ m n : ℤ, m ^ 2 + n ^ 2 = 85 := by
-  sorry
+  use 9
+  use 2
+  numbers
 
 example : ∃ x : ℝ, x < 0 ∧ x ^ 2 < 1 := by
-  sorry
+  use (-1/2)
+  constructor
+  numbers
+  numbers
+
 example : ∃ a b : ℕ, 2 ^ a = 5 * b + 1 := by
-  sorry
+  use 0
+  use 0
+  numbers
+
+-- example (x : ℚ) : ∃ y : ℚ, y ^ 2 > x := by
+--   use (x + 1)
+--   have h0 :=
+--     calc
+--     x = x := by ring
+--     _ < x + 1 := by addarith
+--   have h1 :=
+--   calc
+--     x = x := by ring
+--     _ ≤ x + x ^ 2 := by extra
+--     _ = x * (x + 1) := by ring
+--     -- _ < (x + 1) * (x + 1) := by rel [h0] - doesn't work unforunately, we don't know if x > 0
+--   have h2 :=
+--   calc
+--     2*x ≤ 2 * x + x ^ 2 := by extra
+--     _ ≤ 2 * x + x ^ 2 + 1 ^ 2 := by extra
+--     _ = (x + 1) ^ 2 := by ring
+--   have h3 :=
+--     calc
+--     x ≤ x + 0 ^ 2 / 2 := by extra
+--     _ = (2 * x + 0) / 2 := by ring
+--     _ ≤ ((x + 1) ^ 2 + 0) / 2 := by rel [h2]
+--     _ = (x + 1) ^ 2 / 2 := by ring
+
+-- example (x : ℚ) : ∃ y : ℚ, y ^ 2 > x := by
+--   use (x ^ 2 + 1)
+--   have h0 :=
+--     calc
+--     x ^ 2 < x ^ 2 + 1 := by extra
+--     _ = x ^ 2 + 1 := by ring
+--   have h1 :=
+--     calc
+--     x ^ 2 ≤ x ^ 2 + x ^ 4 := by extra
+--     _ = x ^ 2 * (x ^ 2 + 1) := by ring
+--     _ < (x ^ 2 + 1) * (x ^ 2 + 1) := by rel [h0]
 
 example (x : ℚ) : ∃ y : ℚ, y ^ 2 > x := by
-  sorry
+  use (x + 1) / 2
+  have h00 :=
+    calc
+    x > x - 1 := by addarith
+    _ = x - 1 := by ring
+  have h0 :=
+    calc
+    x < x + 1 := by addarith
+    _ = x + 1 := by ring
+  have h1337 :=
+    calc
+    x = x / 2 + x / 2 := by ring
+    _ ≤ (x / 2 + x / 2) + ((x - 1) / 2) ^ 2 := by extra
+  have h13377 :=
+    calc
+    x = x / 2 + x / 2 := by ring
+    _ ≤ (x / 2 + x / 2) + ((x - 1) / 2) ^ 2 := by extra
+    _ < (x + 1) / 2 + (x + 1) / 2 + ((x - 1) / 2) ^ 2 := by rel [h0]
+  -- have kewl :=
+  --   calc
+  --   ((x + 1) / 2) ^ 2 = (x / 2 + x / 2) + ((x - 1) / 2) ^ 2 := by ring
+  --   _ > (x + 1) / 2 + (x + 1) / 2 + ((x - 1) / 2) ^ 2 := by rel [h0]
+  -- have h1 :=
+  --   calc
+  --   x = x / 2 + x / 2 := by ring
+  --   _ ≤ (x / 2 + x / 2) + ((x - 1) / 2) ^ 2 := by extra
+  --   _ = (x / 2 + x / 2) + (x ^ 2 / 4 - 2 * x / 4 + 1 / 4) := by ring
+  --   _ = x / 2 + x ^ 2 / 4 + 1 / 4 := by ring
+  --   _ = ((x + 1) / 2) ^ 2 := by ring
+  -- have h2 :=
+  --   calc
+  --   ((x + 1) / 2) ^ 2 = x / 2 + x ^ 2 / 4 + 1 / 4 := by ring
+  --   _ = (x / 2 + x / 2) + (x ^ 2 / 4 - 2 * x / 4 + 1 / 4) := by ring
+  --   _ = (x / 2 + x / 2) + ((x - 1) / 2) ^ 2 := by ring
+  --   _ ≥ x := by rel [h1337] -- Close! But how do I get it with '>' instead of '≥'?
+  --   _ > x - 1 := by rel [h00]
+  -- have h3 :=
+  --   calc
+  --   ((x + 1) / 2) ^ 2 = x / 2 + x ^ 2 / 4 + 1 / 4 := by ring
+  --   _ = (x / 2 + x / 2) + (x ^ 2 / 4 - 2 * x / 4 + 1 / 4) := by ring
+  --   _ > (x / 2 + (x) / 2) + (x ^ 2 / 4 - 2 * (x + 1) / 4 + 1 / 4) := by rel [h0]
+  --   _ > (x-1) / 2 + (x-1) / 2 + (x ^ 2 / 4 - 2 * (x + 1) / 4 + 1 / 4) := by rel [h00]
+  --   _ = (x-1) / 2 - (x+1) / 2 + (x-1)/2 + (x ^2 / 4 + 1 / 4) := by ring
+  --   _ = -2 / 2 + (x-1)/2 + (x ^2 / 4 + 1 / 4) := by ring
+  --   _ = x / 2 - 3 / 2 + (x ^2 / 4 + 1 / 4) := by ring --idk where i was going with this lmao
+  --   _ = ((x + 1) / 2) ^ 2 - 3 / 2 := by ring -- might be a clue, who knows.
 
 example {t : ℝ} (h : ∃ a : ℝ, a * t + 1 < a + t) : t ≠ 1 := by
   sorry
