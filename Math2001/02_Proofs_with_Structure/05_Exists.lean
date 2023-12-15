@@ -366,9 +366,10 @@ example {t : ℝ} (h : ∃ a : ℝ, a * t + 1 < a + t) : t ≠ 1 := by
     calc
       t < 1 := by addarith [h13]
 
-/- Failed Attempts for Exercise 6 of section 2.5.9 -/
-
 /-
+
+Failed Attempts for Exercise 6 of section 2.5.9
+
 My intuition told me that dividing the case around 1 was probably a good idea. I ran
 into trouble applying the 'cancel' tactic though, so I assumed I was wrong and abandoned the proof.
 Then, I tried breaking the case around '0' and I was able to prove the first case, when x ≤ 0.
@@ -488,8 +489,162 @@ have to get in the right form.
 --       _ > 0 - 1 := by rel [sheesh]
 --       _ = - 1 := by ring
 
+/-
+Inuititively, this is kind of what I wanted to do. I could see that the cases of
+interest were the ones that split between the integers 2 and 3. I completely
+had forgotton about le_or_succ_le up until now, and just defaulted to using
+le_or_gt to split cases, because that's what worked in the previous problem.
+
+I should be a little more careful about mindlessly applying lemmas to problems that
+don't even benefit from them. In the future, try to not let a previous problem influence
+your thinking in the next. Pretend that these exercises weren't grouped together.
+That should help open up your thinking.
+-/
+
 example {m : ℤ} (h : ∃ a, 2 * a = m) : m ≠ 5 := by
-  sorry
+  obtain ⟨x, h0⟩ := h
+  have h1 := le_or_succ_le x 2
+
+  obtain h2 | h2 := h1
+  · have h3 :=
+      calc
+      m = 2 * x := by rw [h0]
+      _ ≤ 2 * (2) := by rel [h2]
+      _ = 4 := by ring
+      _ < 5 := by numbers
+    apply ne_of_lt
+    apply h3
+
+  · have h3 :=
+      calc
+      m = 2 * x := by rw [h0]
+      _ ≥ 2 * (3) := by rel [h2]
+      _ = 6 := by ring
+      _ > 5 := by numbers
+    apply ne_of_gt
+    apply h3
+
+/-
+
+Failed Attempts for Exercise 7 of section 2.5.9
+
+A lot like the previous problem. Proving the first case is easy, then the second
+is impossible. That's probably a hint that we need to approach it differently, right
+from the start.
+
+-/
+
+-- example {m : ℤ} (h : ∃ a, 2 * a = m) : m ≠ 5 := by
+--   obtain ⟨x, h0⟩ := h
+--   have H := le_or_gt x (-1)
+--   obtain h1 | h1 := H
+
+--   have h00 : 2 * x - m = 0 := by addarith [h0]
+
+--   have h2 :=
+--     calc
+--     m = 2 * x := by rw [h0]
+--     2 * x ≤ 2 * -1 := by rel [h1]
+--     _ = -2 := by ring
+--     _ < 5 := by numbers
+
+--   apply ne_of_lt
+--   apply h2
+
+--   have h100 : 0 = m - 2 * x := by addarith [h0]
+--   have h101 : 2 * x - m = 0 := by addarith [h0]
+
+--   have h1337 :=
+--     calc
+--     -x < - -1 := by rel [h1]
+--     _ = 1 := by ring
+
+--   have h2 :=
+--     calc
+--     2 * x ≤ 2 * x + 8 * 0 := by addarith
+--     _ = 2 * x + 8 * (m - 2 * x) := by rw [h100]
+--     _ = 2 * x + 8 * m + 16 * (-x) := by ring
+--     _ < 2 * x + 8 * m + 16 * (1) := by rel [h1337]
+--     _ = 2 * x +
+
+-- example {m : ℤ} (h : ∃ a, 2 * a = m) : m ≠ 5 := by
+--   obtain ⟨x, h0⟩ := h
+--   have H := le_or_gt x 0
+--   obtain h1 | h1 := H
+
+--   have h100 : 0 = m - 2 * x := by addarith [h0]
+--   have h101 : 2 * x - m = 0 := by addarith [h0]
+
+--   have h2 :=
+--     calc
+--     m = 2 * x := by rw [h0]
+--     _ < 2 * x + 5 := by addarith
+--     _ ≤ 2 * (0) + 5 := by rel [h1]
+--     _ = 5 := by ring
+
+--   apply ne_of_lt
+--   apply h2
+
+--   have h100 : 0 = m - 2 * x := by addarith [h0]
+--   have h101 : 2 * x - m = 0 := by addarith [h0]
+
+--   have h00 :=
+--     calc
+--     - x < - 0 := by rel [h1]
+--     _ = 0 := by ring
+
+--   have h2 :=
+--     calc
+--     2 * x ≤ 2 * x + (2 * x) ^ 2 := by extra
+
+-- example {m : ℤ} (h : ∃ a, 2 * a = m) : m ≠ 5 := by
+--   obtain ⟨x, h0⟩ := h
+--   have H := le_or_gt x 3
+--   obtain h1 | h1 := H
+
+--   have h2 :=
+--     calc
+--     2 * x ≤ 2 * x  + x ^ 2 := by extra
+--     _ ≤ 2 * 3 + (3) ^ 2 := by rel [h1]
+--     _ = 6 := by ring
+
+--   apply ne_of_lt
+--   apply h2
+
+-- example {m : ℤ} (h : ∃ a, 2 * a = m) : m ≠ 5 := by
+--   obtain ⟨x, h0⟩ := h
+--   have H := le_or_gt x 2
+--   obtain h1 | h1 := H
+
+--   have h2 :=
+--     calc
+--     m = 2 * x := by rw [h0]
+--     _ ≤ 2 * 2 := by rel [h1]
+--     _ = 4 := by ring
+--     _ < 5 := by numbers
+
+--   apply ne_of_lt
+--   apply h2
+
+--   have h2 :=
+--     calc
+--     2 * x > 2 * x - 2 := by addarith
+--     _ > 2 * x - x := by rel [h1]
+--     _ = x := by ring
+
+-- example {m : ℤ} (h : ∃ a, 2 * a = m) : m ≠ 5 := by
+--   obtain ⟨x, h0⟩ := h
+--   have H := le_or_gt x 3
+--   obtain h1 | h1 := H
+
+--   have h2 :=
+--     calc
+--     2 * x ≤ 2 * x  + x ^ 2 := by extra
+--     _ ≤ 2 * 3 + (3) ^ 2 := by rel [h1]
+--     _ = 6 := by ring
+
+--   apply ne_of_lt
+--   apply h2
 
 example {a b c : ℝ} (ha : a ≤ b + c) (hb : b ≤ a + c) (hc : c ≤ a + b)
     (ha' : 0 ≤ a) (hb' : 0 ≤ b) (hc' : 0 ≤ c) :
