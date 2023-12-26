@@ -4,6 +4,8 @@ import Library.Basic
 
 attribute [-instance] Int.instDivInt_1 Int.instDivInt Nat.instDivNat
 
+set_option maxHeartbeats 5500000
+
 example {x : ℚ} (hx : 3 * x = 2) : x ≠ 1 := by
   apply ne_of_lt
   calc
@@ -36,4 +38,23 @@ example {m : ℤ} (hm : m + 1 = 5) : 3 * m ≠ 6 := by
   _ > 6 := by numbers
 
 example {s : ℚ} (h1 : 3 * s ≤ -6) (h2 : 2 * s ≥ -4) : s = -2 := by
-  sorry
+  apply le_antisymm
+
+  have h0 :=
+    calc
+    s = 3 * s - 2 * s := by ring
+    _ ≤ -6 - 2 * s := by rel [h1]
+    _ ≤ -6 - (-4) := by rel [h2]
+    _ = -2 := by ring
+  apply h0
+
+  have h0 :=
+    calc
+    s = - (3 * s) + 4 * s := by ring
+    _ ≥ -(-6) + 4 * s := by rel [h1]
+    _ = 6 + 4 * s := by ring
+    _ = 6 + 2 * (2 * s) := by ring
+    _ ≥ 6 + 2 * (-4) := by rel [h2]
+    _ = 6 - 8 := by ring
+    _ = -2 := by ring
+  apply h0
