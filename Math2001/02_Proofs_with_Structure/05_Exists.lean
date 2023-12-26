@@ -9,6 +9,7 @@ import Library.Tactic.Use
 
 attribute [-instance] Int.instDivInt_1 Int.instDivInt EuclideanDomain.instDiv Nat.instDivNat
 
+set_option maxHeartbeats 5500000
 
 example {a : ℚ} (h : ∃ b : ℚ, a = b ^ 2 + 1) : a > 0 := by
   obtain ⟨b, hb⟩ := h
@@ -671,13 +672,74 @@ from the start.
 --       1 * 2 + 7 ≤ n * 2 + 7 := by rel [h1]
 
 example {n : ℤ} : ∃ a, 2 * a ^ 3 ≥ n * a + 7 := by
-  use n
+  use n^2 + 2
   have h0 := le_or_succ_le n 0
   obtain h1 | h1 := h0
-  have nauhgt :=
+
+  have wut : n ^ 2 ≥ 0 := by extra
+
+  have eh :=
     calc
-    n ^ 2 = n * n := by ring
-    _ ≥ 0 * 0 := by rel [h1]
+    2 * (n ^ 2 + 2) ^ 3 = 2 * (n ^ 2 + 2) ^ 3 := by ring
+    _ ≥ 2 * (0 + 2) ^ 3 := by rel [wut]
+    _ = 0 + 2 * (2) ^ 3:= by ring
+    _ = 16 := by ring
+
+  · have muh :=
+      calc
+      n * (n ^ 2 + 2) + 7 ≤ 0 * (n ^ 2 + 2) + 7 := by rel [h1]
+      _ = 7 := by ring
+
+    have rocky :=
+      calc
+      2 * (n ^ 2 + 2) ^ 3 ≥ 16 := by rel [eh]
+      _ ≥ 7 := by numbers
+      _ ≥ n * (n ^ 2 + 2) + 7 := by rel [muh]
+
+    apply rocky
+
+  · have wut : n ^ 2 ≥ 0 := by extra
+
+    have eh :=
+      calc
+      2 * (n ^ 2 + 2) ^ 3 = 2 * (n ^ 2 + 2) ^ 3 := by ring
+      _ ≥ 2 * (0 + 2) ^ 3 := by rel [wut]
+      _ = 0 + 2 * (2) ^ 3:= by ring
+      _ = 16 := by ring
+
+    have sayAgain :=
+      calc
+      2 * (n ^ 2 + 2) ^ 3 = (1) * (n ^ 2 + 2) ^ 3 + (1) * (n ^ 2 + 2) ^ 3 := by ring
+      _ ≤ (n) * (n ^ 2 + 2) ^ 3 + (n) * (n ^ 2 + 2) ^ 3 := by rel [h1]
+      _ = (2 * n) * (n ^ 2 + 2) ^ 3 := by ring
+
+    have idklmao :=
+      calc
+      n * (n ^ 2 + 2) + 7 ≤ n * (n ^ 2 + 2) + 8 := by addarith
+      _ = n * (n ^ 2 + 2) + 8 := by ring
+    -- have huh :=
+    --   calc
+    --   n ^ 6 + n ^ 2 + 9 ≤ n ^ 6 + n ^ 2 + 9 + n ^ 6 := by extra
+    --   _ = n ^ 6 + n ^ 2 + 9 + n ^ 6 := by ring
+    have fudge :=
+      calc
+      n * (n ^ 2 + 2) + 7 = n ^ 3 + 2 * n + 7 := by ring
+      _ ≤ n ^ 3 + 2 * n + 7 + (n - 1) ^ 2 := by extra
+      _ = n ^ 3 + 2 * n + 7 + (n ^ 2 - 2 * n + 1) := by ring
+      _ = n ^ 3 + n ^ 2 + 8 := by ring
+      _ ≤ n ^ 3 + n ^ 2 + 8 + (n ^ 3 - 1) ^ 2 := by extra
+      _ = n ^ 3 + n ^ 2 + 8 + (n ^ 6 - 2 * n ^ 3 + 1) := by ring
+      _ = n ^ 6 - n ^ 3 + n ^ 2 + 9 := by ring
+      _ ≤ (n ^ 6 - n ^ 3 + n ^ 2 + 9) + n ^ 3 := by extra
+      _ = n ^ 6 + n ^ 2 + 9 := by ring
+      _ ≤ n ^ 6 + n ^ 2 + 9 + n^6 := by extra
+      _ ≤ n ^ 6 + n ^ 2 + 9 + n ^ 6 + 23 * n ^ 2 := by extra
+      _ ≤ n ^ 6 + n ^ 2 + 9 + n ^ 6 + 23 * n ^ 2 + 12 * n ^ 4 := by extra
+      _ ≤ n ^ 6 + n ^ 2 + 9 + n ^ 6 + 23 * n ^ 2 + 12 * n ^ 4 + 7 := by addarith
+      _ = 2 * n ^ 6 + 12 * n ^ 4 + 24 * n ^ 2 + 16 := by ring
+      _ = 2 * (n ^ 2 + 2) ^ 3 := by ring
+    apply fudge
+
 
 /- Exercise 9 of section 2.5.9 -/
 /-
