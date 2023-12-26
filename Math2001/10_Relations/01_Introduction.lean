@@ -1,19 +1,11 @@
 /- Copyright (c) Heather Macbeth, 2023.  All rights reserved. -/
 import Mathlib.Data.Real.Basic
-import Library.Tactic.Addarith
-import Library.Tactic.Define
-import Library.Tactic.ExistsDelaborator
-import Library.Tactic.FiniteInductive
-import Library.Tactic.Numbers
-import Library.Tactic.Product
-import Library.Tactic.Extra
-import Library.Tactic.Use
+import Library.Basic
+import Library.Tactic.Exhaust
+import Library.Tactic.ModEq
 
 set_option push_neg.use_distrib true
-attribute [-instance] Int.instDivInt_1 Int.instDivInt EuclideanDomain.instDiv Nat.instDivNat
-
-macro_rules | `(tactic| numbers) => `(tactic| exact trivial)
-macro_rules | `(tactic| numbers) => `(tactic| exact not_false)
+attribute [-instance] Int.instDivInt_1 Int.instDivInt Nat.instDivNat
 
 
 example : Reflexive ((·:ℕ) ∣ ·) := by
@@ -70,6 +62,8 @@ example : Transitive ((·:ℕ) ∣ ·) := by
 
 example : Reflexive ((·:ℝ) = ·) := by
   dsimp [Reflexive]
+  intro x
+  ring
 
 example : Symmetric ((·:ℝ) = ·) := by
   dsimp [Symmetric]
@@ -88,7 +82,7 @@ example : Transitive ((·:ℝ) = ·) := by
 
 
 section
-local infix:50 "∼" => fun (x y : ℝ) ↦ (x - y) ^ 2 ≤ 1 
+local infix:50 "∼" => fun (x y : ℝ) ↦ (x - y) ^ 2 ≤ 1
 
 example : Reflexive (· ∼ ·) := by
   dsimp [Reflexive]
@@ -100,7 +94,7 @@ example : Symmetric (· ∼ ·) := by
   dsimp [Symmetric]
   intro x y h
   calc (y - x) ^ 2 = (x - y) ^ 2 := by ring
-    _ ≤ 1 := by rel [h] 
+    _ ≤ 1 := by rel [h]
 
 example : ¬ AntiSymmetric (· ∼ ·) := by
   dsimp [AntiSymmetric]
@@ -121,7 +115,7 @@ example : ¬ Transitive (· ∼ ·) := by
   constructor
   · numbers
   · numbers
-  
+
 end
 
 
@@ -153,28 +147,24 @@ example : ¬ Reflexive (· ≺ ·) := by
   dsimp [Reflexive]
   push_neg
   use rock
-  numbers
+  exhaust
 
 example : ¬ Symmetric (· ≺ ·) := by
   dsimp [Symmetric]
   push_neg
   use rock, paper
-  constructor <;> numbers
+  exhaust
 
 example : AntiSymmetric (· ≺ ·) := by
   dsimp [AntiSymmetric]
-  intro x y h
-  cases x <;> cases y <;> intro h <;> contradiction
+  intro x y
+  cases x <;> cases y <;> exhaust
 
 example : ¬ Transitive (· ≺ ·) := by
   dsimp [Transitive]
   push_neg
   use rock, paper, scissors
-  constructor
-  · numbers
-  constructor
-  · numbers
-  · numbers
+  exhaust
 
 end
 
@@ -199,6 +189,7 @@ inductive Little
   | jo
   | beth
   | amy
+  deriving DecidableEq
 
 open Little
 
@@ -251,7 +242,7 @@ end
 
 
 section
-local infix:50 "∼" => fun (x y : ℤ) ↦ y ≡ x + 1 [ZMOD 5]  
+local infix:50 "∼" => fun (x y : ℤ) ↦ y ≡ x + 1 [ZMOD 5]
 
 example : Reflexive (· ∼ ·) := by
   sorry
@@ -281,7 +272,7 @@ end
 
 
 section
-local infix:50 "∼" => fun (x y : ℤ) ↦ x + y ≡ 0 [ZMOD 3]  
+local infix:50 "∼" => fun (x y : ℤ) ↦ x + y ≡ 0 [ZMOD 3]
 
 example : Reflexive (· ∼ ·) := by
   sorry

@@ -1,9 +1,8 @@
 /- Copyright (c) Heather Macbeth, 2022.  All rights reserved. -/
 import Mathlib.Data.Real.Basic
-import Library.Tactic.Extra
-import Library.Tactic.Numbers
+import Library.Basic
 
-attribute [-instance] Int.instDivInt_1 Int.instDivInt EuclideanDomain.instDiv Nat.instDivNat
+attribute [-instance] Int.instDivInt_1 Int.instDivInt Nat.instDivNat
 
 /-! # Section 1.4: Proving inequalities -/
 

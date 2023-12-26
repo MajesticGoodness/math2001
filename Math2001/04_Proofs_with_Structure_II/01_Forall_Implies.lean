@@ -1,12 +1,8 @@
 /- Copyright (c) Heather Macbeth, 2022.  All rights reserved. -/
 import Mathlib.Data.Real.Basic
-import Mathlib.Tactic.IntervalCases
-import Library.Theory.Prime
-import Library.Tactic.Numbers
-import Library.Tactic.Extra
-import Library.Tactic.Use
+import Library.Basic
 
-attribute [-instance] Int.instDivInt_1 Int.instDivInt EuclideanDomain.instDiv Nat.instDivNat
+attribute [-instance] Int.instDivInt_1 Int.instDivInt Nat.instDivNat
 
 
 example {a : ℝ} (h : ∀ x, a ≤ x ^ 2 - 2 * x) : a ≤ -1 :=
@@ -45,8 +41,6 @@ example : ∃ b : ℝ, ∀ x : ℝ, b ≤ x ^ 2 - 2 * x := by
 example : ∃ c : ℝ, ∀ x y, x ^ 2 + y ^ 2 ≤ 4 → x + y ≥ c := by
   sorry
 
-notation3 (prettyPrint := false) "forall_sufficiently_large "(...)", "r:(scoped P => ∃ C, ∀ x ≥ C, P x) => r
-
 example : forall_sufficiently_large n : ℤ, n ^ 3 ≥ 4 * n ^ 2 + 7 := by
   dsimp
   use 5
@@ -76,8 +70,8 @@ example : Prime 2 := by
 
 example : ¬ Prime 6 := by
   apply not_prime 2 3
-  · numbers -- show `2 ≠ 1` 
-  · numbers -- show `2 ≠ 6` 
+  · numbers -- show `2 ≠ 1`
+  · numbers -- show `2 ≠ 6`
   · numbers -- show `6 = 2 * 3`
 
 /-! # Exercises -/
@@ -90,6 +84,9 @@ example {n : ℤ} (hn : ∀ m, 1 ≤ m → m ≤ 5 → m ∣ n) : 15 ∣ n := by
   sorry
 
 example : ∃ n : ℕ, ∀ m : ℕ, n ≤ m := by
+  sorry
+
+example : ∃ a : ℝ, ∀ b : ℝ, ∃ c : ℝ, a + b < c := by
   sorry
 
 example : forall_sufficiently_large x : ℝ, x ^ 3 + 3 * x ≥ 7 * x ^ 2 + 12 := by

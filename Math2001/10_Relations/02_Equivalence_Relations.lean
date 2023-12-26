@@ -1,19 +1,12 @@
 /- Copyright (c) Heather Macbeth, 2023.  All rights reserved. -/
 import Mathlib.Data.Real.Basic
-import Library.Theory.ModEq.Lemmas
 import Library.Theory.InjectiveSurjective
-import Library.Tactic.Addarith
-import Library.Tactic.Cancel
-import Library.Tactic.Define
-import Library.Tactic.ExistsDelaborator
-import Library.Tactic.Numbers
-import Library.Tactic.Extra
-import Library.Tactic.Use
+import Library.Basic
+import Library.Tactic.ModEq
 
 set_option push_neg.use_distrib true
-attribute [-instance] Int.instDivInt_1 Int.instDivInt EuclideanDomain.instDiv Nat.instDivNat
+attribute [-instance] Int.instDivInt_1 Int.instDivInt Nat.instDivNat
 open Function
-macro_rules | `(tactic| ring) => `(tactic| ring_nf <;> with_reducible exact trivial)
 
 
 section
@@ -42,6 +35,8 @@ local infix:50 "∼" => fun (x y : ℤ) ↦ x ^ 2 = y ^ 2
 
 example : Reflexive (· ∼ ·) := by
   dsimp [Reflexive]
+  intro x
+  ring
 
 example : Symmetric (· ∼ ·) := by
   dsimp [Symmetric]
@@ -72,8 +67,8 @@ notation:arg "⦍" a "⦐" => { b | a ∼ b }
 theorem EquivalenceClass.eq_of_rel (h_symm : @Symmetric α r) (h_trans : @Transitive α r)
     {a1 a2 : α} (ha : a1 ∼ a2) :
     ⦍a1⦐ = ⦍a2⦐ := by
+  ext b
   dsimp
-  intro b
   constructor
   · intro ha1b
     apply h_trans (y := a1)
@@ -97,6 +92,8 @@ local infix:50 "∼" => fun ((a, b) : ℤ × ℕ) (c, d) ↦ a * (d + 1) = c * (
 
 example : Reflexive (· ∼ ·) := by
   dsimp [Reflexive]
+  intro (a, b)
+  dsimp
 
 example : Symmetric (· ∼ ·) := by
   dsimp [Symmetric]
@@ -147,7 +144,7 @@ example : Symmetric (· ∼ ·) := by
   use f
   constructor
   · apply hfg2
-  · apply hfg1 
+  · apply hfg1
 
 example : Transitive (· ∼ ·) := by
   dsimp [Transitive]
@@ -168,7 +165,7 @@ end
 
 
 section
-local infix:50 "∼" => fun (a b : ℤ) ↦ ∃ m n, m > 0 ∧ n > 0 ∧ a * m = b * n  
+local infix:50 "∼" => fun (a b : ℤ) ↦ ∃ m n, m > 0 ∧ n > 0 ∧ a * m = b * n
 
 example : Reflexive (· ∼ ·) := by
   sorry
@@ -198,7 +195,7 @@ end
 
 
 section
-local infix:50 "∼" => fun ((a, b) : ℤ × ℤ) (c, d) ↦ 
+local infix:50 "∼" => fun ((a, b) : ℤ × ℤ) (c, d) ↦
   ∃ m n, m > 0 ∧ n > 0 ∧ m * b * (b ^ 2 - 3 * a ^ 2) = n * d * (d ^ 2 - 3 * c ^ 2)
 
 example : Reflexive (· ∼ ·) := by

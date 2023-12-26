@@ -1,18 +1,13 @@
 /- Copyright (c) Heather Macbeth, 2023.  All rights reserved. -/
 import Mathlib.Data.Real.Basic
 import Library.Theory.InjectiveSurjective
-import Library.Tactic.Addarith
-import Library.Tactic.ExistsDelaborator
-import Library.Tactic.Induction
-import Library.Tactic.ModCases
-import Library.Tactic.Numbers
-import Library.Tactic.Product
-import Library.Tactic.Extra
-import Library.Tactic.Use
+import Library.Basic
+import Library.Tactic.ModEq
 
-attribute [-instance] Int.instDivInt_1 Int.instDivInt EuclideanDomain.instDiv Nat.instDivNat
+attribute [-instance] Int.instDivInt_1 Int.instDivInt Nat.instDivNat
 set_option push_neg.use_distrib true
 attribute [-simp] ne_eq
+attribute [-ext] Prod.ext
 open Function
 
 macro_rules | `(tactic| ring) => `(tactic| ring_nf <;> with_reducible exact trivial)
@@ -43,10 +38,10 @@ example : Bijective (fun ((m, n) : ℤ × ℤ) ↦ (m + n, m + 2 * n)) := by
   rw [bijective_iff_exists_inverse]
   use fun (a, b) ↦ (2 * a - b, b - a)
   constructor
-  · funext (m, n)
+  · ext ⟨m, n⟩
     dsimp
     ring
-  · funext (a, b)
+  · ext ⟨a, b⟩
     dsimp
     ring
 
@@ -87,7 +82,7 @@ example : ¬ Injective (fun ((x, y) : ℝ × ℝ) ↦ x + y) := by
   constructor
   · numbers
   · numbers
-    
+
 example : Surjective (fun ((x, y) : ℝ × ℝ) ↦ x + y) := by
   intro a
   use (a, 0)
@@ -130,9 +125,8 @@ def g : ℝ × ℝ → ℝ × ℝ
   | (x, y) => (y, x)
 
 example : g ∘ g = id := by
-  funext (x, y)
+  ext ⟨x, y⟩
   dsimp [g]
-  ring
 
 
 def A : ℕ → ℕ

@@ -1,10 +1,8 @@
 /- Copyright (c) Heather Macbeth, 2022.  All rights reserved. -/
 import Mathlib.Data.Real.Basic
-import Library.Tactic.Addarith
-import Library.Tactic.Numbers
-import Library.Tactic.Extra
+import Library.Basic
 
-attribute [-instance] Int.instDivInt_1 Int.instDivInt EuclideanDomain.instDiv Nat.instDivNat
+attribute [-instance] Int.instDivInt_1 Int.instDivInt Nat.instDivNat
 
 example {x : ℚ} (hx : 3 * x = 2) : x ≠ 1 := by
   apply ne_of_lt
@@ -36,3 +34,6 @@ example {m : ℤ} (hm : m + 1 = 5) : 3 * m ≠ 6 := by
   3 * m = 3 * (4) := by rw [h]
   _ = 12 := by ring
   _ > 6 := by numbers
+
+example {s : ℚ} (h1 : 3 * s ≤ -6) (h2 : 2 * s ≥ -4) : s = -2 := by
+  sorry

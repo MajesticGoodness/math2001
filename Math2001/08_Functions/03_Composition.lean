@@ -1,25 +1,21 @@
 /- Copyright (c) Heather Macbeth, 2023.  All rights reserved. -/
 import Mathlib.Data.Real.Basic
-import Library.Tactic.Addarith
-import Library.Tactic.ExistsDelaborator
-import Library.Tactic.FiniteInductive
-import Library.Tactic.Numbers
-import Library.Tactic.Rel
-import Library.Tactic.Use
+import Library.Basic
+import Library.Tactic.Exhaust
 
 
-attribute [-instance] Int.instDivInt_1 Int.instDivInt EuclideanDomain.instDiv Nat.instDivNat
+attribute [-instance] Int.instDivInt_1 Int.instDivInt Nat.instDivNat
+attribute [-simp] ne_eq
 set_option push_neg.use_distrib true
-set_option pp.unicode.fun true
 open Function
 
 
 def f (a : ℝ) : ℝ := a + 3
 def g (b : ℝ) : ℝ := 2 * b
-def h (c : ℝ) : ℝ := 2 * c + 6 
+def h (c : ℝ) : ℝ := 2 * c + 6
 
 example : g ∘ f = h := by
-  funext x
+  ext x
   calc (g ∘ f) x = g (f x) := by rfl
     _ = 2 * (x + 3) := by rfl
     _ = 2 * x + 6 := by ring
@@ -29,7 +25,7 @@ example : g ∘ f = h := by
 def s (x : ℝ) : ℝ := 5 - x
 
 example : s ∘ s = id := by
-  funext x
+  ext x
   dsimp [s]
   ring
 
@@ -42,6 +38,7 @@ inductive Humour
   | choleric
   | phlegmatic
   | sanguine
+  deriving DecidableEq
 
 open Humour
 
@@ -61,10 +58,10 @@ def q : Humour → Humour
 
 example : Inverse p q := by
   constructor
-  · funext x
-    cases x <;> inductive_type
-  · funext x
-    cases x <;> inductive_type
+  · ext x
+    cases x <;> exhaust
+  · ext x
+    cases x <;> exhaust
 
 
 theorem exists_inverse_of_bijective {f : X → Y} (hf : Bijective f) :
@@ -76,15 +73,15 @@ theorem exists_inverse_of_bijective {f : X → Y} (hf : Bijective f) :
   use g
   dsimp [Inverse]
   constructor
-  · -- prove `g ∘ f = id` 
-    funext x
+  · -- prove `g ∘ f = id`
+    ext x
     dsimp [Injective] at h_inj
     apply h_inj
     calc f ((g ∘ f) x) = f (g (f x)) := by rfl
       _ = f x := by apply hg
       _ = f (id x) := by rfl
-  · -- prove `f ∘ g = id` 
-    funext y
+  · -- prove `f ∘ g = id`
+    ext y
     apply hg
 
 
@@ -141,8 +138,8 @@ def c : Humour → Humour
   | sanguine => sorry
 
 example : b ∘ a = c := by
-  funext x
-  cases x <;> inductive_type
+  ext x
+  cases x <;> exhaust
 
 
 def u (x : ℝ) : ℝ := 5 * x + 1
